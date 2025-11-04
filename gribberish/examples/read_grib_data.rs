@@ -7,7 +7,7 @@
 //!   cargo run --example read_grib_data
 //!   cargo run --example read_grib_data -- /path/to/file.grib2
 
-use gribberish::api::{
+use gribberish_spire::api::{
     build_message_index, read_all_messages, read_message_at_offset, scan_messages,
 };
 use std::env;

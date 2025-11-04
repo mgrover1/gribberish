@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use gribberish::{
+use gribberish_spire::{
     grib_naming::{cfgrib_variable_name, cfgrib_coordinate_name, cfgrib_probabilistic_name},
     message::Message, message_metadata::scan_message_metadata,
     templates::product::tables::FixedSurfaceType,
@@ -219,7 +219,7 @@ pub fn parse_grib_dataset<'py>(
         // This produces cleaner names like "t" instead of "t_isobaricInhPa_fcst"
         let hash = if v.2.is_probability {
             // Include probability type and thresholds in hash to separate different thresholds
-            let prob_type_ref = v.2.probability_type.as_ref().unwrap_or(&gribberish::templates::product::tables::ProbabilityType::Missing);
+            let prob_type_ref = v.2.probability_type.as_ref().unwrap_or(&gribberish_spire::templates::product::tables::ProbabilityType::Missing);
             let lower = v.2.lower_limit.unwrap_or(0.0);
             let upper = v.2.upper_limit.unwrap_or(0.0);
 

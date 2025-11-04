@@ -8,7 +8,7 @@ use crate::templates::product::tables::{
 use crate::utils::iter::projection::LatLngProjection;
 use bitvec::view::BitView;
 use chrono::{DateTime, Utc};
-use gribberish_types::Parameter;
+use gribberish_spire_types::Parameter;
 use std::collections::HashMap;
 use std::vec::Vec;
 

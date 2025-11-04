@@ -86,7 +86,7 @@ impl Default for ParameterRegistry {
 ///
 /// # Example
 /// ```no_run
-/// use gribberish::config::{ConfigLoader, init_registry};
+/// use gribberish_spire::config::{ConfigLoader, init_registry};
 ///
 /// let config = ConfigLoader::from_yaml_file("config.yaml").unwrap();
 /// init_registry(&config);
@@ -119,7 +119,7 @@ pub fn get_registry() -> std::sync::RwLockReadGuard<'static, Option<ParameterReg
 ///
 /// # Example
 /// ```no_run
-/// use gribberish::config::lookup_parameter;
+/// use gribberish_spire::config::lookup_parameter;
 ///
 /// if let Some(param) = lookup_parameter(0, 192, 1) {
 ///     println!("Found parameter: {} ({})", param.name, param.abbreviation);

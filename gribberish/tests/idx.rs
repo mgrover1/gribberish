@@ -1,7 +1,7 @@
 use std::{fs::File, io::Read};
 use std::fs::read_to_string;
 
-use gribberish::message_metadata::scan_message_metadata;
+use gribberish_spire::message_metadata::scan_message_metadata;
 
 extern crate gribberish;
 

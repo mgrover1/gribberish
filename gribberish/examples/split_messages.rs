@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{Read, Write};
 use std::path::{PathBuf};
 use clap::Parser;
-use gribberish::message_metadata::scan_message_metadata;
+use gribberish_spire::message_metadata::scan_message_metadata;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]

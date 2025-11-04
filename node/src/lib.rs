@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use gribberish::{
+use gribberish_spire::{
   data_message::DataMessage,
   message::{read_message, read_messages, scan_messages},
 };

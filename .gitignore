@@ -4,6 +4,7 @@
 target/
 temp/
 testdata/
+test-data/
 
 # Ignore grib2io index files (auto-generated)
 *.grib2ioidx

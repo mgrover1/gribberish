@@ -1,5 +1,5 @@
 use chrono::{DateTime, Duration, Utc};
-use gribberish_types::Parameter;
+use gribberish_spire_types::Parameter;
 
 use super::{
     parameters::{category, parameter},

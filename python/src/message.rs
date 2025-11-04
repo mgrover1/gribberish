@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
-use gribberish::message::Message;
-use gribberish::message_metadata::{scan_message_metadata, MessageMetadata};
+use gribberish_spire::message::Message;
+use gribberish_spire::message_metadata::{scan_message_metadata, MessageMetadata};
 use numpy::{PyArray, PyArray1};
 use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;

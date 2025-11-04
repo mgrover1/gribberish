@@ -340,15 +340,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
 
 [[package]]
-name = "gribberish"
+name = "gribberish-spire"
 version = "0.23.0"
 dependencies = [
  "bitflags 2.6.0",
  "bitvec",
  "chrono",
  "clap",
- "gribberish-macros",
- "gribberish-types",
+ "gribberish-spire-macros",
+ "gribberish-spire-types",
  "itertools",
  "libaec-sys",
  "mappers",
@@ -362,16 +362,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "gribberish-macros"
+name = "gribberish-spire-macros"
 version = "0.23.0"
 dependencies = [
- "gribberish-types",
+ "gribberish-spire-types",
  "quote",
  "syn 1.0.109",
 ]
 
 [[package]]
-name = "gribberish-types"
+name = "gribberish-spire-types"
 version = "0.23.0"
 
 [[package]]
@@ -379,7 +379,7 @@ name = "gribberishjs"
 version = "0.23.0"
 dependencies = [
  "chrono",
- "gribberish",
+ "gribberish-spire",
  "napi",
  "napi-build",
  "napi-derive",
@@ -389,7 +389,7 @@ dependencies = [
 name = "gribberishpy"
 version = "0.23.0"
 dependencies = [
- "gribberish",
+ "gribberish-spire",
  "numpy",
  "pyo3",
 ]

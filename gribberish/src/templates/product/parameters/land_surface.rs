@@ -1,5 +1,5 @@
-use gribberish_macros::{DisplayDescription, FromValue, ToParameter};
-use gribberish_types::Parameter;
+use gribberish_spire_macros::{DisplayDescription, FromValue, ToParameter};
+use gribberish_spire_types::Parameter;
 
 #[repr(u8)]
 #[derive(Eq, PartialEq, Debug, DisplayDescription, FromValue, ToParameter)]

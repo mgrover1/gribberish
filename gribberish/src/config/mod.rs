@@ -27,7 +27,7 @@
 //! Load and use the configuration:
 //!
 //! ```no_run
-//! use gribberish::config::{ConfigLoader, init_registry};
+//! use gribberish_spire::config::{ConfigLoader, init_registry};
 //!
 //! // Load configuration
 //! let config = ConfigLoader::from_yaml_file("gribberish-config.yaml").unwrap();

@@ -1,4 +1,4 @@
-use gribberish_types::Parameter;
+use gribberish_spire_types::Parameter;
 
 use self::{meteorological::{meteorological_category, meteorological_parameter}, land_surface::{land_surface_category, land_surface_parameter}, oceanographic::{oceanographic_category, oceanographic_parameter}, mrms::{multiradar_category, multiradar_parameter}};
 

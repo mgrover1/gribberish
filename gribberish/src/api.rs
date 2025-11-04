@@ -18,7 +18,7 @@ use std::collections::HashMap;
 ///
 /// # Example
 /// ```no_run
-/// use gribberish::api::read_all_messages;
+/// use gribberish_spire::api::read_all_messages;
 ///
 /// let data = std::fs::read("example.grib2").unwrap();
 /// let messages = read_all_messages(&data).unwrap();

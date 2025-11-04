@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Try to scan messages
     println!("\n=== Scanning messages (native backend) ===");
-    let messages = gribberish::message::read_messages(&data);
+    let messages = gribberish_spire::message::read_messages(&data);
     let mut count = 0;
     let mut template_ids = std::collections::HashMap::new();
 

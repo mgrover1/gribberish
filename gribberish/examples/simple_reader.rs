@@ -5,7 +5,7 @@
 //! Usage:
 //!   cargo run --example simple_reader
 
-use gribberish::api::read_all_messages;
+use gribberish_spire::api::read_all_messages;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 1. Read the GRIB file (supports both GRIB1 and GRIB2)

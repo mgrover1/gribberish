@@ -1,5 +1,5 @@
 use crate::{utils::{read_u16_from_bytes, read_u32_from_bytes}, templates::grid_definition::{GridDefinitionTemplate, LatLngTemplate, LambertConformalTemplate}};
-use gribberish_macros::{DisplayDescription, FromValue};
+use gribberish_spire_macros::{DisplayDescription, FromValue};
 use super::grib_section::GribSection;
 
 #[repr(u8)]
