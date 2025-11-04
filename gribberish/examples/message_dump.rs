@@ -1,6 +1,3 @@
-extern crate chrono;
-extern crate gribberish;
-
 use gribberish_spire::message::MessageIterator;
 use std::env;
 use std::fs::File;

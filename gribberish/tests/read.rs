@@ -1,5 +1,3 @@
-extern crate gribberish;
-
 use gribberish_spire::message::{Message, read_messages};
 use std::time::Instant;
 use std::vec::Vec;
