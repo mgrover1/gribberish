@@ -311,7 +311,9 @@ fn grib1_to_metadata(message: &Grib1Message) -> Result<MessageMetadata, Gribberi
         proj: "longlat".to_string(),
         crs: "EPSG:4326".to_string(),
         is_regular_grid,
-        grid_shape,
+        // GRIB1 grid_shape() returns (ni, nj) = (lon_count, lat_count)
+        // but MessageMetadata expects (lat_count, lon_count) for consistency with GRIB2
+        grid_shape: (grid_shape.1, grid_shape.0),
         projector,
         is_ensemble: false,
         perturbation_number: None,
