@@ -21,9 +21,18 @@ pub struct LambertConformalConicProjection {
 }
 
 #[derive(Clone, Debug)]
+pub struct GaussianProjection {
+    pub latitudes: IrregularCoordinateIterator,
+    pub longitudes: RegularCoordinateIterator,
+    pub projection_name: String,
+    pub projection_params: HashMap<String, f64>,
+}
+
+#[derive(Clone, Debug)]
 pub enum LatLngProjection {
     PlateCaree(PlateCareeProjection),
     LambertConformal(LambertConformalConicProjection),
+    Gaussian(GaussianProjection),
 }
 
 impl LatLngProjection {
@@ -31,6 +40,7 @@ impl LatLngProjection {
         match self {
             LatLngProjection::PlateCaree(_) => true,
             LatLngProjection::LambertConformal(_) => false,
+            LatLngProjection::Gaussian(_) => false, // Irregular latitudes
         }
     }
 
@@ -71,6 +81,23 @@ impl LatLngProjection {
                         .collect::<Vec<(f64, f64)>>()
                 })
                 .unzip(),
+            LatLngProjection::Gaussian(projection) => {
+                let lats: Vec<f64> = projection.latitudes.clone().collect();
+                let lon_start = projection.longitudes.start;
+                let lngs: Vec<f64> = projection.longitudes.clone()
+                    .map(|lon| {
+                        // Normalize to 0..360 range for grids that wrap around the globe
+                        if lon >= 360.0 {
+                            lon - 360.0
+                        } else if lon < 0.0 && lon_start >= 0.0 {
+                            lon + 360.0
+                        } else {
+                            lon
+                        }
+                    })
+                    .collect();
+                (lats, lngs)
+            }
         }
     }
 
@@ -92,6 +119,21 @@ impl LatLngProjection {
                     .collect()
             }
             LatLngProjection::LambertConformal(projection) => projection.x.clone().collect(),
+            LatLngProjection::Gaussian(projection) => {
+                let lon_start = projection.longitudes.start;
+                projection.longitudes.clone()
+                    .map(|lon| {
+                        // Normalize to 0..360 range for grids that wrap around the globe
+                        if lon >= 360.0 {
+                            lon - 360.0
+                        } else if lon < 0.0 && lon_start >= 0.0 {
+                            lon + 360.0
+                        } else {
+                            lon
+                        }
+                    })
+                    .collect()
+            }
         }
     }
 
@@ -99,12 +141,13 @@ impl LatLngProjection {
         match self {
             LatLngProjection::PlateCaree(projection) => projection.latitudes.clone().collect(),
             LatLngProjection::LambertConformal(projection) => projection.y.clone().collect(),
+            LatLngProjection::Gaussian(projection) => projection.latitudes.clone().collect(),
         }
     }
 
     pub fn project_xy(&self, x: f64, y: f64) -> (f64, f64) {
         match self {
-            LatLngProjection::PlateCaree(_) => (x, y),
+            LatLngProjection::PlateCaree(_) | LatLngProjection::Gaussian(_) => (x, y),
             LatLngProjection::LambertConformal(projection) => {
                 let projected = projection.projection.project(x, y).unwrap();
                 (projected.1, projected.0)
@@ -114,7 +157,7 @@ impl LatLngProjection {
 
     pub fn project_latlng(&self, lat: f64, lng: f64) -> (f64, f64) {
         match self {
-            LatLngProjection::PlateCaree(_) => (lng, lat),
+            LatLngProjection::PlateCaree(_) | LatLngProjection::Gaussian(_) => (lng, lat),
             LatLngProjection::LambertConformal(projection) => {
                 let projected = projection.projection.inverse_project(lng, lat).unwrap();
                 (projected.1, projected.0)
@@ -124,7 +167,7 @@ impl LatLngProjection {
 
     pub fn bbox(&self) -> (f64, f64, f64, f64) {
         match self {
-            LatLngProjection::PlateCaree(_) | LatLngProjection::LambertConformal(_) => {
+            LatLngProjection::PlateCaree(_) | LatLngProjection::LambertConformal(_) | LatLngProjection::Gaussian(_) => {
                 // Use lat_lng() to get normalized coordinates
                 let (lat, lng) = self.lat_lng();
                 let (min_lat, max_lat) = lat.into_iter().minmax().into_option().unwrap();
@@ -140,6 +183,10 @@ impl LatLngProjection {
             LatLngProjection::LambertConformal(projection) => {
                 self.project_xy(projection.x.start, projection.y.start)
             },
+            LatLngProjection::Gaussian(projection) => {
+                let lat_start = projection.latitudes.values.first().copied().unwrap_or(0.0);
+                (lat_start, projection.longitudes.start)
+            },
         }
     }
 
@@ -149,6 +196,10 @@ impl LatLngProjection {
             LatLngProjection::LambertConformal(projection) => {
                 self.project_xy(projection.x.end, projection.y.end)
             },
+            LatLngProjection::Gaussian(projection) => {
+                let lat_end = projection.latitudes.values.last().copied().unwrap_or(0.0);
+                (lat_end, projection.longitudes.end)
+            },
         }
     }
 
@@ -156,6 +207,7 @@ impl LatLngProjection {
         match self {
             LatLngProjection::PlateCaree(projection) => projection.projection_name.clone(),
             LatLngProjection::LambertConformal(projection) => projection.projection_name.clone(),
+            LatLngProjection::Gaussian(projection) => projection.projection_name.clone(),
         }
     }
 
@@ -163,6 +215,7 @@ impl LatLngProjection {
         match self {
             LatLngProjection::PlateCaree(projection) => projection.projection_params.clone(),
             LatLngProjection::LambertConformal(projection) => projection.projection_params.clone(),
+            LatLngProjection::Gaussian(projection) => projection.projection_params.clone(),
         }
     }
 }
@@ -201,6 +254,36 @@ impl Iterator for RegularCoordinateIterator {
         let coordinate = self.start + self.step * self.current_index as f64;
 
         // Increment the iterator
+        self.current_index += 1;
+
+        Some(coordinate)
+    }
+}
+
+/// Iterator for irregularly-spaced coordinates (e.g., Gaussian latitudes)
+#[derive(Clone, Debug)]
+pub struct IrregularCoordinateIterator {
+    pub values: Vec<f64>,
+    current_index: usize,
+}
+
+impl IrregularCoordinateIterator {
+    pub fn new(values: Vec<f64>) -> Self {
+        Self {
+            values,
+            current_index: 0,
+        }
+    }
+}
+
+impl Iterator for IrregularCoordinateIterator {
+    type Item = f64;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current_index >= self.values.len() {
+            return None;
+        }
+
+        let coordinate = self.values[self.current_index];
         self.current_index += 1;
 
         Some(coordinate)
